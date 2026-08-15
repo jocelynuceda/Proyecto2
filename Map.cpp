@@ -61,24 +61,27 @@ void Map::cargarMapa(ifstream& in) {
     }
 }
 
-void Map::loadFromFile(const string& archivo) { //nunca se usa
+void Map::loadFromFile(const string& archivo) {
     ifstream in(archivo);
     if (!in.is_open()) { cout << "operacion no valida" << endl; return; }
-
-    mapa.assign(tamanio_real, vector<string>(tamanio_real));
-
-    string linea;
-    int i = 0;
-    while (getline(in, linea) and i < tamanio_real) {
-        int j = 0; string celda;
-        for (char ch : linea) {
-            if (ch == '|') { mapa[i][j++] = celda; celda.clear(); }
-            else { celda += ch; }
-        }
-        if (j < tamanio_real) mapa[i][j] = celda;
-        i++;
-    }
+    cargarMapa(in);
     in.close();
+}
+
+void Map::recorrerSegmento(int fi, int fj, int ti, int tj, const function<void(int, int)>& visitar) {
+    int di = 0;
+    if (ti > fi) di = 1;
+    else if (ti < fi) di = -1;
+
+    int dj = 0;
+    if (tj > fj) dj = 1;
+    else if (tj < fj) dj = -1;
+
+    int i = fi, j = fj;
+    while (i != ti or j != tj) {
+        visitar(i, j);
+        i += di; j += dj;
+    }
 }
 
 void Map::buildPath(const vector<int>& wpFila, const vector<int>& wpCol) {
@@ -87,20 +90,7 @@ void Map::buildPath(const vector<int>& wpFila, const vector<int>& wpCol) {
     for (int k = 0; k < n - 1; k++) {
         int fi = (wpFila[k] - 1) * 2, fj = (wpCol[k] - 1) * 2;
         int ti = (wpFila[k+1] - 1) * 2, tj = (wpCol[k+1] - 1) * 2;
-
-        int di = 0;
-        if (ti > fi) di = 1;
-        else if (ti < fi) di = -1;
-
-        int dj = 0;
-        if (tj > fj) dj = 1;
-        else if (tj < fj) dj = -1;
-
-        int i = fi, j = fj;
-        while (i != ti or j != tj) {
-            mapa[i][j] = "#";
-            i += di; j += dj;
-        }
+        recorrerSegmento(fi, fj, ti, tj, [this](int i, int j) { mapa[i][j] = "#"; });
     }
     mapa[(wpFila[n-1] - 1) * 2][(wpCol[n-1] - 1) * 2] = "#";
 }
@@ -111,23 +101,10 @@ void Map::buildEnemyRoute(const vector<int>& wpFila, const vector<int>& wpCol) {
     ruta_col.clear();
 
     for (int k = 0; k < n - 1; k++) {
-        int fi = wpFila[k], fj = wpCol[k];
-        int ti = wpFila[k+1], tj = wpCol[k+1];
-
-        int di = 0;
-        if (ti > fi) di = 1;
-        else if (ti < fi) di = -1;
-
-        int dj = 0;
-        if (tj > fj) dj = 1;
-        else if (tj < fj) dj = -1;
-
-        int i = fi, j = fj;
-        while (i != ti or j != tj) {
+        recorrerSegmento(wpFila[k], wpCol[k], wpFila[k+1], wpCol[k+1], [this](int i, int j) {
             ruta_fila.push_back((i - 1) * 2);
             ruta_col.push_back((j - 1) * 2);
-            i += di; j += dj;
-        }
+        });
     }
     ruta_fila.push_back((wpFila[n-1] - 1) * 2);
     ruta_col.push_back((wpCol[n-1] - 1) * 2);

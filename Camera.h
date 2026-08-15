@@ -9,9 +9,11 @@ private:
     int startRow;
     int startCol;
 
+    void mover(int& eje, int n);
+
 public:
-    int tam_map= 40;
-    int tam_ventana= 20;
+    int tam_map = 40;
+    int tam_ventana = 20;
 
     Camera();
     ~Camera();
@@ -27,7 +29,7 @@ public:
     Camera operator+(const Camera& other) const;
     friend ostream& operator<<(ostream& os, const Camera& c);
 
-    friend class Map; //
+    friend class Map;
     friend class Game;
 };
 

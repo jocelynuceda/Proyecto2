@@ -7,27 +7,16 @@ Camera::Camera() {
 
 Camera::~Camera() {}
 
-void Camera::moverArriba(int n) {
-    this->startRow -= n;
-    if (this->startRow < 0) this->startRow = 0; //validar
+void Camera::mover(int& eje, int n) {
+    eje += n;
+    if (eje < 0) eje = 0;
+    if (eje > tam_map - tam_ventana) eje = tam_map - tam_ventana;
 }
 
-void Camera::moverAbajo(int n) {
-    this->startRow += n;
-    if (this->startRow > tam_map - tam_ventana) // >20 ?
-        this->startRow = tam_map - tam_ventana;
-}
-
-void Camera::moverIzquierda(int n) {
-    this->startCol -= n;
-    if (this->startCol < 0) this->startCol = 0;
-}
-
-void Camera::moverDerecha(int n) {
-    this->startCol += n;
-    if (this->startCol > tam_map - tam_ventana)
-        this->startCol = tam_map - tam_ventana;
-}
+void Camera::moverArriba(int n) { mover(startRow, -n); }
+void Camera::moverAbajo(int n) { mover(startRow, n); }
+void Camera::moverIzquierda(int n) { mover(startCol, -n); }
+void Camera::moverDerecha(int n) { mover(startCol, n); }
 
 int Camera::get_fila_inicio() const {
     return startRow;
@@ -42,7 +31,7 @@ Camera Camera::operator+(const Camera& other) const {
     resultado.startRow = this->startRow + other.startRow;
     resultado.startCol = this->startCol + other.startCol;
     return resultado;
-} //p.e
+}
 
 ostream& operator<<(ostream& os, const Camera& c) {
     os << c.startRow << " " << c.startCol;

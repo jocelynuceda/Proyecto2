@@ -27,6 +27,7 @@ private:
     void limpiar();
     string restaurarCelda(int filaInt, int colInt) const;
     void mostrarVentana_impl() const;
+    void mostrarBienvenida() const;
 
 public:
     Game();

@@ -2,6 +2,7 @@
 #define MAP_H
 #include <string>
 #include <vector>
+#include <functional>
 
 using namespace std;
 
@@ -14,6 +15,8 @@ private:
     vector<int> ruta_fila;
     vector<int> ruta_col;
 
+    static void recorrerSegmento(int fi, int fj, int ti, int tj, const function<void(int, int)>& visitar);
+
     void buildPath(const vector<int>& wpFila, const vector<int>& wpCol);
     void buildEnemyRoute(const vector<int>& wpFila, const vector<int>& wpCol);
 
@@ -25,7 +28,7 @@ public:
 
     void saveGrid(ofstream& out) const;
     void cargarMapa(ifstream& in);
-    void loadFromFile(const string& archivo); //
+    void loadFromFile(const string& archivo);
 
     string getCell(int fila, int col);
     void setCell(int fila, int col, const string& valor);
@@ -34,9 +37,9 @@ public:
     int getRutaFila(int idx);
     int getRutaCol(int idx);
 
-    string celdaVacia(int fila, int col); //
+    string celdaVacia(int fila, int col);
 
     bool esPosicionValida(int x, int y) const;
 };
 
-#endif // MAP_H
+#endif

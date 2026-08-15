@@ -2,27 +2,11 @@
 
 int Tower::contador = 0;
 
-Tower::Tower(int fila, int columna) {
-    this->fila = fila;
-    this->columna = columna;
-    this->danio = 1;
-    this->rango = 2;
-    this->cantidadDisparos = 1;
-    this->disparosUsados = 0;
-    this->activa = true;
-    this->numero = ++contador;
-}
+Tower::Tower(int fila, int columna)
+    : Tower(fila, columna, 1) {}
 
-Tower::Tower(int fila, int columna, int danio) {
-    this->fila = fila;
-    this->columna = columna;
-    this->danio = danio;
-    this->rango = 2;
-    this->cantidadDisparos = 1;
-    this->disparosUsados = 0;
-    this->activa = true;
-    this->numero = ++contador;
-}
+Tower::Tower(int fila, int columna, int danio)
+    : Tower(fila, columna, danio, 2, 1) {}
 
 Tower::Tower(int fila, int columna, int danio, int rango, int disparosMax) {
     this->fila = fila;

@@ -53,6 +53,10 @@ void Game::mostrarVentana_impl() const {
     }
 }
 
+void Game::mostrarBienvenida() const {
+    cout << "Welcome to the world of tower defense xyz" << endl;
+}
+
 bool Game::iniciarJuego(const string& archivoMapa) {
     limpiar();
     this->dinero = 300;
@@ -62,10 +66,8 @@ bool Game::iniciarJuego(const string& archivoMapa) {
     this->iniciado = true;
     this->huboOleada = false;
 
-    cout << "Welcome to the world of tower defense xyz" << endl;
-    cout << "Dinero: " << dinero << endl;
-    cout << "Torres: " << torres.size() << endl;
-    cout << "Enemigos: " << enemigos.size() << endl;
+    mostrarBienvenida();
+    mostrarEstado();
     return true;
 }
 
@@ -100,7 +102,7 @@ void Game::colocarTorre(int x, int y, int danio, int disparos) {
         int nf = fi + df[k], nc = ci + dc[k];
         if (nf >= 0 && nf < tamanio_real && nc >= 0 && nc < tamanio_real) {
             string s = mapa->getCell(nf, nc);
-            if (s == "#" || s == "I" || s == "B") { adyacente=true; break;}
+            if (s == "#" || s == "I" || s == "B") { adyacente = true; break; }
         }
     }
     if (!adyacente) {
@@ -128,12 +130,10 @@ void Game::generarEnemigos(int vida) {
 
     for (int i = 0; i < cantidad; i++) {
         enemigos.push_back(new Enemy(i, vida));
-        mapa->setCell(mapa->getRutaFila(i),mapa->getRutaCol(i),"E");
+        mapa->setCell(mapa->getRutaFila(i), mapa->getRutaCol(i), "E");
     }
 
-    cout<<"Dinero: " << dinero << endl;
-    cout<<"Torres: " << torres.size() << endl;
-    cout<<"Enemigos: " << enemigos.size() << endl;
+    mostrarEstado();
 }
 
 void Game::moverEnemigos() {
@@ -243,16 +243,16 @@ bool Game::baseDestruida() const {
 
 void Game::guardarJuego(const string& archivo) {
     ofstream f(archivo);
-    if (!f.is_open()) { cout<<"Error al guardar"<<endl; return; }
+    if (!f.is_open()) { cout << "Error al guardar" << endl; return; }
 
     f << dinero << "\n";
     f << torres.size() << "\n";
     for (int i = 0; i < (int)torres.size(); i++)
-        f<<*torres[i] << "\n";
-    f<<enemigos.size() << "\n";
+        f << *torres[i] << "\n";
+    f << enemigos.size() << "\n";
     for (int i = 0; i < (int)enemigos.size(); i++)
-        f<<*enemigos[i] << "\n";
-    f<<*camara << "\n";
+        f << *enemigos[i] << "\n";
+    f << *camara << "\n";
     mapa->saveGrid(f);
     f.close();
     cout << "Juego guardado" << endl;
@@ -260,7 +260,7 @@ void Game::guardarJuego(const string& archivo) {
 
 bool Game::cargarJuego(const string& archivo) {
     ifstream f(archivo);
-    if (!f.is_open()) { cout << "operacion no valida" << endl; return false;}
+    if (!f.is_open()) { cout << "operacion no valida" << endl; return false; }
 
     limpiar();
     this->mapa = new Map();
@@ -300,10 +300,8 @@ bool Game::cargarJuego(const string& archivo) {
     f.close();
 
     this->iniciado = true;
-    cout<<"Welcome to the world of tower defense xyz" << endl;
-    cout<<"Dinero: " << dinero << endl;
-    cout<<"Torres: " << torres.size() << endl;
-    cout<<"Enemigos: " << enemigos.size() << endl;
+    mostrarBienvenida();
+    mostrarEstado();
     mostrarVentana_impl();
     return true;
 }
